@@ -23,6 +23,10 @@
 #     Changes  : Added the following to the output ... 
 #              : - Current Temp 
 #
+#     Date     : 19 May 2025
+#     Author   : Daniel Gavin
+#     Changes  : Cleaned up output formatting.
+#
 #     Date     : 
 #     Author   : 
 #     Changes  : 
@@ -37,7 +41,7 @@ from datetime import datetime
 
 load_dotenv(dotenv_path="GetWeather.env")
 
-VERSION = '1.01'
+VERSION = '1.02'
 UNITS   = 'imperial'
 API_KEY = os.getenv("WEATHER_API_KEY") 
 
@@ -194,7 +198,7 @@ def Main():
         return
 
     print("")
-    print("🌤️    Fetching weather for your daily briefing ...\n")
+    print("🌤️   Fetching weather for your daily briefing ...\n")
 
     #
     # fetch weather based on arguments
@@ -220,7 +224,7 @@ def Main():
     if weatherData:
 
         currentTemp = weatherData["current"]["temp"]
-        print(f"🌡️    Current Temp:\t{currentTemp}°F\n")
+        print(f"🌡️   Current Temp:\t{currentTemp}°F\n")
 
         #
         # print forecast for number of days requested
@@ -252,7 +256,7 @@ def Main():
                 label = f"{datetime.fromtimestamp(dayData['dt']).strftime('%A')} ({forecastDate})"
 
             print(f"📅  {label}")
-            print("🌡️s   High Temp:\t\t"   + str(tempHigh))
+            print("🌡️s  High Temp:\t\t"   + str(tempHigh))
             print("❄️   Low Temp:\t\t"    + str(tempLow))
             print("💨  Feels Like:\t\t"  + str(feelsLike))
             print("☂️   Pack Umbrella:\t" + umbrella)
