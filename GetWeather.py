@@ -238,7 +238,7 @@ def Main():
                 label = f"{datetime.fromtimestamp(dayData['dt']).strftime('%A')} ({forecastDate})"
 
             print(f"📅  {label}")
-            print("🌡️  High Temp:\t\t"   + str(tempHigh))
+            print("🌡️   High Temp:\t\t"   + str(tempHigh))
             print("❄️   Low Temp:\t\t"    + str(tempLow))
             print("💨  Feels Like:\t\t"  + str(feelsLike))
             print("☂️   Pack Umbrella:\t" + umbrella)
