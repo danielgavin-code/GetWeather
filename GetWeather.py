@@ -37,7 +37,7 @@ from datetime import datetime
 
 load_dotenv(dotenv_path="GetWeather.env")
 
-VERSION = '1.1'
+VERSION = '1.01'
 UNITS   = 'imperial'
 API_KEY = os.getenv("WEATHER_API_KEY") 
 
