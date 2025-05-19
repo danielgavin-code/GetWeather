@@ -18,6 +18,11 @@
 #     Author   : Daniel Gavin
 #     Changes  : New file.
 # 
+#     Date     : 19 May 2025
+#     Author   : Daniel Gavin
+#     Changes  : Added the following to the output ... 
+#              : - Current Temp 
+#
 #     Date     : 
 #     Author   : 
 #     Changes  : 
@@ -166,7 +171,7 @@ def ParseArgs():
     return parser.parse_args()
 
 
-#############################################################################
+############################################################################
 #
 # Procedure   : Main
 #
@@ -189,7 +194,7 @@ def Main():
         return
 
     print("")
-    print("🌤️   Fetching weather for your daily briefing ...\n")
+    print("🌤️    Fetching weather for your daily briefing ...\n")
 
     #
     # fetch weather based on arguments
@@ -208,16 +213,25 @@ def Main():
         print("[ERROR] You must provide either --zip or --city with --state.")
         return
 
-    # print forecast for number of days requested 
+    #
+    # print current temperature immediately after banner
+    #
 
     if weatherData:
+
+        currentTemp = weatherData["current"]["temp"]
+        print(f"🌡️    Current Temp:\t{currentTemp}°F\n")
+
+        #
+        # print forecast for number of days requested
+        #
 
         numDays = args.days
         maxDaysAvailable = len(weatherData.get("daily", []))
 
         if numDays > maxDaysAvailable:
             print(f"[WARNING] Only {maxDaysAvailable} days of forecast available. Showing {maxDaysAvailable}-day forecast.\n")
-            numDays = maxDaysAvailable
+            numDays = maxDaysAvailable 
 
         for i in range(numDays):
 
@@ -238,7 +252,7 @@ def Main():
                 label = f"{datetime.fromtimestamp(dayData['dt']).strftime('%A')} ({forecastDate})"
 
             print(f"📅  {label}")
-            print("🌡️   High Temp:\t\t"   + str(tempHigh))
+            print("🌡️s   High Temp:\t\t"   + str(tempHigh))
             print("❄️   Low Temp:\t\t"    + str(tempLow))
             print("💨  Feels Like:\t\t"  + str(feelsLike))
             print("☂️   Pack Umbrella:\t" + umbrella)
