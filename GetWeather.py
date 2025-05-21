@@ -27,6 +27,11 @@
 #     Author   : Daniel Gavin
 #     Changes  : Cleaned up output formatting.
 #
+#     Date     : 20 May 2025
+#     Author   : Daniel Gavin
+#     Changes  : Added support for default variables in env file.
+#              : - zip, city, state
+#
 #     Date     : 
 #     Author   : 
 #     Changes  : 
@@ -39,11 +44,15 @@ import requests
 from dotenv   import load_dotenv
 from datetime import datetime
 
+VERSION = '1.03'
+UNITS   = 'imperial'
+
 load_dotenv(dotenv_path="GetWeather.env")
 
-VERSION = '1.02'
-UNITS   = 'imperial'
-API_KEY = os.getenv("WEATHER_API_KEY") 
+API_KEY       = os.getenv("WEATHER_API_KEY") 
+DEFAULT_ZIP   = os.getenv("DEFAULT_ZIP")
+DEFAULT_CITY  = os.getenv("DEFAULT_CITY")
+DEFAULT_STATE = os.getenv("DEFAULT_STATE")
 
 #############################################################################
 #
@@ -212,6 +221,12 @@ def Main():
         city        = args.city
         state       = args.state
         weatherData = GetWeather(city=city, state=state)
+
+    elif DEFAULT_ZIP:
+        weatherData = GetWeather(zipCode=DEFAULT_ZIP)
+
+    elif DEFAULT_CITY and DEFAULT_STATE:
+        weatherData = GetWeather(city=DEFAULT_CITY, state=DEFAULT_STATE)
 
     else:
         print("[ERROR] You must provide either --zip or --city with --state.")
