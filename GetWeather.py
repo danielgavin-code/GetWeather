@@ -32,12 +32,14 @@
 #     Changes  : Added support for default variables in env file.
 #              : - zip, city, state
 #
-#     Date     : 20 May 2025
+#     Date     : 21 May 2025
 #     Author   : Daniel Gavin
-#     Changes  : Added support for the following input in GetWeather() ...
-#              : - units
+#     Changes  : Added support for units ...
+#              : - Imperial
+#              : - Standard
+#              : - Metric
 #
-#     Date     : 20 May 2025
+#     Date     : 21 May 2025
 #     Author   : Daniel Gavin
 #     Changes  : Cleaned formatting.
 #
@@ -256,16 +258,21 @@ def Main():
 
     if weatherData:
 
-        currentTemp = weatherData["current"]["temp"]
+        unitIndicator = ""
+        currentTemp   = weatherData["current"]["temp"]
 
         if units.lower() == 'metric':
-            print(f"🌡️   Current Temp:\t{currentTemp}°C\n")
+
+            unitIndicator = "°C"
+            print(f"🌡️   Current Temp:\t{currentTemp}" + unitIndicator + "\n")
 
         elif units.lower() == 'imperial':
-            print(f"🌡️  Current Temp:\t{currentTemp}°F\n")
+
+            unitIndicator = "°F"
+            print(f"🌡️   Current Temp:\t{currentTemp}" + unitIndicator + "\n")
 
         else:
-            print(f"🌡️  Current Temp:\t{currentTemp}\n")
+            print(f"🌡️   Current Temp:\t{currentTemp}\n")
 
         #
         # print forecast for number of days requested
@@ -297,9 +304,9 @@ def Main():
                 label = f"{datetime.fromtimestamp(dayData['dt']).strftime('%A')} ({forecastDate})"
 
             print(f"📅  {label}")
-            print("🌡️   High Temp:\t\t"   + str(tempHigh))
-            print("❄️   Low Temp:\t\t"    + str(tempLow))
-            print("💨  Feels Like:\t\t"  + str(feelsLike))
+            print("🌡️   High Temp:\t\t"  + str(tempHigh)  + unitIndicator)
+            print("❄️   Low Temp:\t\t"    + str(tempLow)   + unitIndicator)
+            print("💨  Feels Like:\t\t"  + str(feelsLike) + unitIndicator)
             print("☂️   Pack Umbrella:\t" + umbrella)
             print("")
 
