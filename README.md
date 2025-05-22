@@ -17,7 +17,7 @@
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/yourusername/GetWeather.git
+git clone https://github.com/danielgavin-code/GetWeather.git
 cd GetWeather
 pip install -r requirements.txt
 cp GetWeather.env.template GetWeather.env
