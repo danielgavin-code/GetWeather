@@ -32,6 +32,15 @@
 #     Changes  : Added support for default variables in env file.
 #              : - zip, city, state
 #
+#     Date     : 20 May 2025
+#     Author   : Daniel Gavin
+#     Changes  : Added support for the following input in GetWeather() ...
+#              : - units
+#
+#     Date     : 20 May 2025
+#     Author   : Daniel Gavin
+#     Changes  : Cleaned formatting.
+#
 #     Date     : 
 #     Author   : 
 #     Changes  : 
@@ -44,8 +53,7 @@ import requests
 from dotenv   import load_dotenv
 from datetime import datetime
 
-VERSION = '1.03'
-UNITS   = 'imperial'
+VERSION = '1.05'
 
 load_dotenv(dotenv_path="GetWeather.env")
 
@@ -70,7 +78,7 @@ DEFAULT_STATE = os.getenv("DEFAULT_STATE")
 #
 ###############################################################################
 
-def GetWeather(zipCode=None, city=None, state=None):
+def GetWeather(zipCode=None, city=None, state=None, units="Imperial"):
 
     #
     # Get latitude and longitude from OpenWeather geo API
@@ -110,7 +118,7 @@ def GetWeather(zipCode=None, city=None, state=None):
         lat = geoData["lat"]
         lon = geoData["lon"]
 
-    url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid={API_KEY}&units={UNITS}"
+    url = f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=minutely,hourly,alerts&appid={API_KEY}&units={units}"
     response = requests.get(url)
 
     if response.status_code != 200:
@@ -175,11 +183,12 @@ def ParseArgs():
         description="GetWeather: command line tool to fetch weather"
     )
 
-    parser.add_argument("--zip",      type=str,            help="ZIP code (e.g. 11211)")
-    parser.add_argument("--city",     type=str,            help="City name (weather app format)")
-    parser.add_argument("--state",    type=str,            help="State code (if using --city)")
-    parser.add_argument("--days",     type=int, default=1, help="Forecast days (1–10)")
-    parser.add_argument("--version",  action="store_true", help="Display version and exit")
+    parser.add_argument("--zip",      type=str,                     help="ZIP code (e.g. 11211)")
+    parser.add_argument("--city",     type=str,                     help="City name (weather app format)")
+    parser.add_argument("--state",    type=str,                     help="State code (if using --city)")
+    parser.add_argument("--days",     type=int, default=1,          help="Forecast days (1–10)")
+    parser.add_argument("--units",    type=str, default="Imperial", help="Imperial, Standard, or Metric")
+    parser.add_argument("--version",  action="store_true",          help="Display version and exit")
 
     return parser.parse_args()
 
@@ -198,6 +207,7 @@ def ParseArgs():
 
 def Main():
 
+    units       = ""
     weatherData = ""
 
     args = ParseArgs()
@@ -209,24 +219,32 @@ def Main():
     print("")
     print("🌤️   Fetching weather for your daily briefing ...\n")
 
+    if args.units:
+
+        units = args.units
+
+        if not units:
+
+            units = os.getenv("DEFAULT_UNITS")
+
     #
     # fetch weather based on arguments
     #
 
     if args.zip:
         zipCode = args.zip
-        weatherData = GetWeather(zipCode=zipCode)
+        weatherData = GetWeather(zipCode=zipCode, units=units)
 
     elif args.city and args.state:
         city        = args.city
         state       = args.state
-        weatherData = GetWeather(city=city, state=state)
+        weatherData = GetWeather(city=city, state=state, units=units)
 
     elif DEFAULT_ZIP:
-        weatherData = GetWeather(zipCode=DEFAULT_ZIP)
+        weatherData = GetWeather(zipCode=DEFAULT_ZIP, units=units)
 
     elif DEFAULT_CITY and DEFAULT_STATE:
-        weatherData = GetWeather(city=DEFAULT_CITY, state=DEFAULT_STATE)
+        weatherData = GetWeather(city=DEFAULT_CITY, state=DEFAULT_STATE, units=units)
 
     else:
         print("[ERROR] You must provide either --zip or --city with --state.")
@@ -239,7 +257,15 @@ def Main():
     if weatherData:
 
         currentTemp = weatherData["current"]["temp"]
-        print(f"🌡️   Current Temp:\t{currentTemp}°F\n")
+
+        if units.lower() == 'metric':
+            print(f"🌡️   Current Temp:\t{currentTemp}°C\n")
+
+        elif units.lower() == 'imperial':
+            print(f"🌡️  Current Temp:\t{currentTemp}°F\n")
+
+        else:
+            print(f"🌡️  Current Temp:\t{currentTemp}\n")
 
         #
         # print forecast for number of days requested
@@ -271,7 +297,7 @@ def Main():
                 label = f"{datetime.fromtimestamp(dayData['dt']).strftime('%A')} ({forecastDate})"
 
             print(f"📅  {label}")
-            print("🌡️s  High Temp:\t\t"   + str(tempHigh))
+            print("🌡️   High Temp:\t\t"   + str(tempHigh))
             print("❄️   Low Temp:\t\t"    + str(tempLow))
             print("💨  Feels Like:\t\t"  + str(feelsLike))
             print("☂️   Pack Umbrella:\t" + umbrella)
