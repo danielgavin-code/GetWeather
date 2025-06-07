@@ -47,6 +47,10 @@
 #     Author   : Daniel Gavin
 #     Changes  : Created PrintHelp()
 #
+#     Date     : 7 June 2025
+#     Author   : Daniel Gavin
+#     Changes  : Added --days argument to PrintHelp().
+#
 #     Date     : 
 #     Author   : 
 #     Changes  : 
@@ -92,6 +96,9 @@ Usage:
   --zip <zipcode>             Fetch weather using ZIP code.
   --city <city> --state <st>  Use city and state combo. Example: --city "Huntington Beach" --state CA
 
+📆 Forecast Options:
+  --days <1-10>               Number of forecast days to display. Default: 1.
+
 🌡️ Units:
   --units <type>              Choose units: 'Imperial' (°F), 'Metric' (°C), or 'Standard' (Kelvin).
                                  Default: Imperial
@@ -102,7 +109,7 @@ Usage:
 
 📌 Examples:
   GetWeather.py --zip 06905
-  GetWeather.py --city "Huntington Beach" --state CA --units Metric
+  GetWeather.py --city "Huntington Beach" --state CA --units Metric --days 3
 
 🌟 Pro Tips:
   • Use an .env file to set default ZIP or city/state.
