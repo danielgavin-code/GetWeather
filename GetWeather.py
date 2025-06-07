@@ -43,6 +43,10 @@
 #     Author   : Daniel Gavin
 #     Changes  : Cleaned formatting.
 #
+#     Date     : 7 June 2025
+#     Author   : Daniel Gavin
+#     Changes  : Created PrintHelp()
+#
 #     Date     : 
 #     Author   : 
 #     Changes  : 
@@ -55,7 +59,7 @@ import requests
 from dotenv   import load_dotenv
 from datetime import datetime
 
-VERSION = '1.05'
+VERSION = '1.06'
 
 load_dotenv(dotenv_path="GetWeather.env")
 
@@ -63,6 +67,53 @@ API_KEY       = os.getenv("WEATHER_API_KEY")
 DEFAULT_ZIP   = os.getenv("DEFAULT_ZIP")
 DEFAULT_CITY  = os.getenv("DEFAULT_CITY")
 DEFAULT_STATE = os.getenv("DEFAULT_STATE")
+
+###############################################################################
+#
+# Procedure   : PrintHelp()
+#
+# Description : Beautified --help
+#
+# Input       : -none-
+#
+# Returns     : -none- 
+#
+###############################################################################
+
+def PrintHelp():
+
+    helpText = """
+⛅ GetWeather: A flexible CLI tool to check today’s weather. 🌤️
+
+Usage:
+  GetWeather.py [options]
+
+🌍 Location Options:
+  --zip <zipcode>             Fetch weather using ZIP code.
+  --city <city> --state <st>  Use city and state combo. Example: --city "Huntington Beach" --state CA
+
+🌡️ Units:
+  --units <type>              Choose units: 'Imperial' (°F), 'Metric' (°C), or 'Standard' (Kelvin).
+                                 Default: Imperial
+
+🛠️ Utilities:
+  --version                   Show script version.
+  --help                      Display this help message.
+
+📌 Examples:
+  GetWeather.py --zip 06905
+  GetWeather.py --city "Huntington Beach" --state CA --units Metric
+
+🌟 Pro Tips:
+  • Use an .env file to set default ZIP or city/state.
+  • 'Standard' returns temperatures in Kelvin — useful for labs.
+  • Add this to a morning script or cronjob for daily forecasts.
+  • If no data shows, check your API key and location details.
+  • Pack an umbrella if its going to rain. ☂️🌦️ 
+"""
+
+    print(helpText)
+
 
 #############################################################################
 #
@@ -182,15 +233,22 @@ def PackUmbrella(weatherData, day=0):
 def ParseArgs():
 
     parser = argparse.ArgumentParser(
-        description="GetWeather: command line tool to fetch weather"
+        description="GetWeather: command line tool to fetch weather",
+        add_help=False
     )
 
-    parser.add_argument("--zip",      type=str,                     help="ZIP code (e.g. 11211)")
-    parser.add_argument("--city",     type=str,                     help="City name (weather app format)")
-    parser.add_argument("--state",    type=str,                     help="State code (if using --city)")
+    # location
+    parser.add_argument("--zip",      type=str,                     help="ZIP code (e.g. 90210)")
+    parser.add_argument("--city",     type=str,                     help="City name (e.g. 'Huntington Beach')")
+    parser.add_argument("--state",    type=str,                     help="State code (e.g. CA)")
+
+    # forcast and format 
     parser.add_argument("--days",     type=int, default=1,          help="Forecast days (1–10)")
-    parser.add_argument("--units",    type=str, default="Imperial", help="Imperial, Standard, or Metric")
+    parser.add_argument("--units",    type=str, default="Imperial", help="Units: Imperial, Metric, or Standard")
+
+    # command line 
     parser.add_argument("--version",  action="store_true",          help="Display version and exit")
+    parser.add_argument("--help",     action="store_true",          help="Show help and usage information")
 
     return parser.parse_args()
 
@@ -213,6 +271,10 @@ def Main():
     weatherData = ""
 
     args = ParseArgs()
+
+    if args.help:
+        PrintHelp()
+        return
 
     if args.version:
         print("Version: " + VERSION)
