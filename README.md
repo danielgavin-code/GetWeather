@@ -69,7 +69,7 @@ requests
 </pre>
 
 **📦 Installation**
-<pre>git clone https://github.com/your-username/GetWeather.git
+<pre>git clone https://github.com/danielgavin-code/GetWeather.git
 cd GetWeather
 pip install -r requirements.txt
 cp GetWeather.env.template GetWeather.env
