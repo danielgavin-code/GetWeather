@@ -7,8 +7,8 @@
 #     Author   : Daniel Gavin
 #
 #     Function : Weather module for Daily Briefing. 
-#              : - Connect to OpenWeatherMap.org via API
-#              : - Download  daily weather summary.
+#              : - Connect to OpenWeatherMap.org via API.
+#              : - Download daily weather summary.
 #              : - Determine if you should pack an umbrella.
 #              : - Display output.
 #
